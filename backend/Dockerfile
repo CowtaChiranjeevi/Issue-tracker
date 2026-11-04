@@ -2,18 +2,23 @@
 FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 
-# Copy pom.xml first to cache dependencies
+# Limit Maven JVM memory so it stays well within Render free-tier RAM (512MB)
+ENV MAVEN_OPTS="-Xmx256m -XX:+UseSerialGC"
+
 COPY pom.xml ./
 COPY src ./src
 
-# Build package without running or compiling tests
-RUN mvn clean package -Dmaven.test.skip=true
+# Build package, skipping tests and lowering memory usage
+RUN mvn clean package -DskipTests -Dmaven.test.skip=true -Dspring-boot.repackage.skip=false -e
 
-# Step 2: Run the application
+# Step 2: Minimal runtime image
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
 
+# Run Java with minimal memory footprint suited for 512MB
+ENV JAVA_OPTS="-Xmx300m -XX:+UseSerialGC"
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
