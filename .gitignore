@@ -1,0 +1,20 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backend ignores
+backend/target/
+backend/.mvn/
+backend/*.log
+
+# Frontend ignores
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.production
+frontend/.env.local
+
+# IDE & Docker
+.idea/
+.vscode/
+docker/data/
