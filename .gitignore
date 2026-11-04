@@ -3,7 +3,8 @@
 Thumbs.db
 
 # Backend ignores
-backend/target/
+backend/target/*
+!backend/target/*.jar
 backend/*.log
 
 # Frontend ignores
