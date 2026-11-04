@@ -1,8 +1,13 @@
 # Step 1: Build the JAR
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
+
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
+
+# Grant execution permission to the Maven wrapper
+RUN chmod +x ./mvnw
+
 RUN ./mvnw dependency:go-offline -B
 COPY src ./src
 RUN ./mvnw clean package -DskipTests
