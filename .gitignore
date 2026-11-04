@@ -4,7 +4,6 @@ Thumbs.db
 
 # Backend ignores
 backend/target/
-backend/.mvn/
 backend/*.log
 
 # Frontend ignores
